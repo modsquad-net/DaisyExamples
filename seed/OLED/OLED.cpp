@@ -10,10 +10,10 @@ using namespace daisy;
  * 
  *  There are several other premade test 
 */
-using MyOledDisplay = OledDisplay<SSD130x4WireSpi128x64Driver>;
+using Display1306 = OledDisplay<SSD130x4WireSpi128x64Driver>;
 
 DaisySeed     hw;
-MyOledDisplay display;
+Display1306 display;
 
 int main(void)
 {
@@ -22,9 +22,12 @@ int main(void)
     hw.Init();
 
     /** Configure the Display */
-    MyOledDisplay::Config disp_cfg;
-    disp_cfg.driver_config.transport_config.pin_config.dc    = hw.GetPin(9);
-    disp_cfg.driver_config.transport_config.pin_config.reset = hw.GetPin(30);
+    //dp 9 d0
+    //dp 10 cs
+    //dp 11 d1
+    Display1306::Config disp_cfg;
+    disp_cfg.driver_config.transport_config.pin_config.dc    = hw.GetPin(9); //daisy pin 8
+    disp_cfg.driver_config.transport_config.pin_config.reset = hw.GetPin(30); //daisy pin 37
     /** And Initialize */
     display.Init(disp_cfg);
 
@@ -42,10 +45,10 @@ int main(void)
             case 4: sprintf(strbuff, "3. . ."); break;
             default: break;
         }
-        message_idx = (message_idx + 1) % 5;
-        display.Fill(true);
-        display.SetCursor(0, 0);
-        display.WriteString(strbuff, Font_11x18, false);
+        message_idx = (message_idx + 1) % 5;                                // repeat modulo 5
+        display.Fill(true);                                                 // white bg
+        display.SetCursor(0, 0);                                            // upper left
+        display.WriteString(strbuff, Font_11x18, false);                    // Font_6x8, black (inverted)
         display.Update();
     }
 }
